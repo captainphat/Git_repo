@@ -1,0 +1,2 @@
+- name: ping os Windows
+  win_ping: 

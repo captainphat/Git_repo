@@ -1,0 +1,10 @@
+- name: Copy Source
+  copy:
+    src: "/home/phatnguyen/tools/wazuh-agent-4.4.3-1.msi"
+    dest: "C:/Users/ansible/Downloads/wazuh-agent.msi"
+
+- name: Install MSI with PowerShell
+  win_shell: |
+    $msiPath = "C:\Users\ansible\Downloads\wazuh-agent.msi"
+    $installDir = "C:\Program Files (x86)\wazuh-agent"
+    Start-Process msiexec.exe -ArgumentList "/i `"$msiPath`" INSTALLDIR=`"$installDir`" /qn" -Wait

@@ -1,0 +1,6 @@
+filebeat.modules:
+  - module: ansible
+    log:
+      enabled: true
+      var.paths: ["/var/log/ansible/ansible.log*"]
+

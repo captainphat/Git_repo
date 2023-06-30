@@ -1,0 +1,2 @@
+- name: ping test OS  linux
+  ping: 

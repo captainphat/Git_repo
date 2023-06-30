@@ -1,0 +1,56 @@
+- name: Download and Install Wazuh Agent
+  hosts: windows
+  tasks:
+    - name: Download wazuh-agent.msi
+      win_get_url:
+        url: https://packages.wazuh.com/4.x/windows/wazuh-agent-4.4.3-1.msi
+        dest: C:\Users\ansible\Downloads\wazuh-agent.msi
+
+    - name: Install wazuh-agent.msi
+      win_package:
+        path: C:\Users\ansible\Downloads\wazuh-agent.msi
+        arguments: /qn
+
+    - name: getIP-agent
+      win_shell: ipconfig | findstr IPv4
+      register: ipconfig_output
+
+    - name: Split IPv4
+      set_fact:
+        ip_address: "{{ ipconfig_output.stdout.split(':')[-1].strip()  }}"
+    - name: Split IPv4 2
+      set_fact:
+        ip_address2: "{{ ip_address.split('.')[-2:] | join('.') }}"
+    - name: Get Name
+      win_shell: hostname
+      register: name_output
+
+    - name: Get HostName
+      set_fact:
+        full_hostname: "{{ name_output.stdout.strip() }}_{{ ip_address2}}"
+
+    - name: Config server_wz ossec.conf file
+      win_lineinfile:
+        path: "C:/Program Files (x86)/ossec-agent/ossec.conf"
+        regexp: "<address>.*</address>$"
+        line: "<address>192.168.11.127</address>"
+
+    - name: check config agent 
+      win_shell: Get-Content -Path "C:\Program Files (x86)\ossec-agent\ossec.conf" | Where-Object { $_ -match "<enrollment>" }
+      register: check_config
+      changed_when: false
+
+    - name: add config agent
+      win_lineinfile:
+        path: "C:/Program Files (x86)/ossec-agent/ossec.conf"
+        insertafter: "<auto_restart>yes</auto_restart>"
+        line: |
+            <enrollment>
+              <enabled>yes</enabled>
+              <groups>windows</groups>
+              <agent_name>"{{ full_hostname  }}"</agent_name>
+            </enrollment>
+      when: check_config.stdout | length == 0 
+
+    - name: start service wazuh
+      win_shell: Start-Service -name "wazuh"

@@ -1,0 +1,13 @@
+- name: Assert Linux OS
+  assert:
+    that:
+      - that: ansible_os_family in ['RedHat', 'CentOS', 'Fedora', 'Ubuntu', 'Debian', 'CoreOS', 'Container Linux by CoreOS', 'openSUSE Leap', 'openSUSE Tumbleweed', 'ClearLinux']
+  register: check
+
+- name: Import Linux tasks
+  import_tasks: /etc/ansible/roles/test/tasks/ping_linux.yml
+  when: check
+
+- name: Import Windows tasks
+  import_tasks: /etc/ansible/roles/test/tasks/ping_window.yml
+  when: ansible_os_family == "windows" 

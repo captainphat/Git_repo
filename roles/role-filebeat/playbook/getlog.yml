@@ -1,0 +1,6 @@
+- name: Get Log
+  hosts: linux
+  vars_files:
+    - vars/main.yml
+  roles:
+    - role: role-filebeat

@@ -1,0 +1,31 @@
+- name: Get full hostname
+  hosts: windows
+  gather_facts: false
+  tasks:
+    - name: Get IP address
+      win_shell: ipconfig | findstr IPv4
+      register: ipconfig_output
+
+    - name: Extract IP address
+      set_fact:
+        ip_address: "{{ ipconfig_output.stdout_lines[0].split(':')[-1].strip() }}"
+      when: ipconfig_output.stdout_lines | length > 0
+
+    - name: Set Last Two IP Parts
+      set_fact:
+        ip_last_two_parts: "{{ ip_address.split('.')[-2:] | join('.') }}"
+      when: ip_address is defined
+
+    - name: Get Hostname
+      win_shell: hostname
+      register: name_output
+
+    - name: Set Full Hostname
+      set_fact:
+        full_hostname: "{{ name_output.stdout.strip() + '_' + ip_last_two_parts }}"
+      when: ip_last_two_parts is defined
+
+    - name: Print Full Hostname
+      debug:
+        var: full_hostname
+

@@ -1,0 +1,31 @@
+---
+- name: Ping hosts and save results to log
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create log directory
+      become: yes
+      file:
+        path: /var/log/ansible
+        state: directory
+        mode: '0755'
+
+    - name: Copy log file
+      become: yes
+      copy:
+        content: ''
+        dest: /var/log/ansible/ansible.log
+        mode: '0644'
+
+    - name: Ping hosts
+      ping:
+      register: ping_result
+
+    - name: Save ping results to log
+      lineinfile:
+        dest: /var/log/ansible/ansible.log
+        line: "{{ ansible_play_hosts_all }}: {{ ping_result }}"
+        create: yes
+      delegate_to: localhost
+      run_once: true
+

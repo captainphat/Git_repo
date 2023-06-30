@@ -1,0 +1,26 @@
+- name: create user ansible 
+  user:
+    name: ansible
+    password: "{{ 'P@ssWord123' }}"  
+    groups: wheel
+    state: present
+  become: true 
+
+- name: Check Filebeat package
+  command: rpm -q filebeat-7.*
+  register: filebeat_package_status
+  ignore_errors: true
+
+- name: Print Filebeat installation status
+  debug:
+    msg: "Filebeat is {{ 'installed' if filebeat_package_status.rc == 0 else 'not installed' }}"
+
+- name: copy source filebeat-7.x
+  copy:
+    src: "{{ filebeat_src }}"
+    dest: /home/ansible
+  when: filebeat_package_status.rc != 0 
+
+- name: install filebeat 
+  shell: rpm -i "{{ filebeat_rpm }}"
+  when: filebeat_package_status.rc != 0 

@@ -1,0 +1,4 @@
+- name: get log 
+  hosts: linux
+  roles: 
+    - role: role-filebeat

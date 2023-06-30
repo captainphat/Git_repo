@@ -1,0 +1,3 @@
+- import_tasks: /etc/ansible/roles/wazuh/tasks/install_wazuh.yml
+- import_tasks: /etc/ansible/roles/wazuh/tasks/config_wazuh.yml
+- import_tasks: /etc/ansible/roles/wazuh/tasks/start_wazuh.yml

@@ -1,0 +1,6 @@
+- name: Ping 
+  hosts: linux
+  gather_facts: yes
+  roles:  
+    - test
+  

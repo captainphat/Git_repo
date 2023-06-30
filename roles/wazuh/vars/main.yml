@@ -1,0 +1,4 @@
+wazuh_install_dir: C:\Users\ansible\Downloads\wazuh-agent.msi
+wazuh_config_file: C:\Program Files (x86)\wazuh-agent\ossec.conf 
+wazuh_dir: C:\Program Files (x86)\wazuh-agent\
+wazuh_default_dir: C:\Program Files (x86)\ossec-agent\

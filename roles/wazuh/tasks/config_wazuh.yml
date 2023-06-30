@@ -1,0 +1,44 @@
+- name: check name
+  win_shell: Test-Path "{{ wazuh_default_dir }}"
+  register: check_name
+  changed_when: false
+
+- name: Rename directory
+  win_shell: |
+    $oldPath = "{{ wazuh_default_dir }}"
+    $newPath = "{{ wazuh_dir }}"
+    Rename-Item -Path $oldPath -NewName $newPath
+  when: check_name.stdout == "true" 
+
+- name: getIP-agent
+  win_shell: ipconfig | findstr IPv4
+  register: ipconfig_output
+
+- name: Split IPv4
+  set_fact:
+    ip_address: "{{ ipconfig_output.stdout.split(':')[-1].strip()  }}"
+
+- name: Split IPv4 2
+  set_fact:
+    ip_address2: "{{ ip_address.split('.')[-2:] | join('.') }}"
+
+- name: Get Name
+  win_shell: hostname
+  register: name_output
+
+- name: Get HostName
+  set_fact:
+    full_hostname: "{{ name_output.stdout.strip() }}_{{ ip_address2}}"
+
+- name: edit host name to template 
+  template:
+    src: ossec.conf.j2
+    dest: "{{ wazuh_config_file }}" 
+  vars: 
+    full_hostname: "{{ full_hostname }}" 
+- name: add template
+  win_lineinfile:
+    path: "{{ wazuh_config_file }}"
+    insertafter: "<autorestart>yes</autorestart>"
+    line: "{{ lookup('template', 'ossec.conf.j2') }}"
+

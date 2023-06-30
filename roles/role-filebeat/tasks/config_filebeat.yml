@@ -1,0 +1,33 @@
+- name: copy filebeat config
+  template:
+    src: "filebeat_config.j2"
+    dest: "/etc/filebeat/filebeat.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: check cert dir
+  stat:
+    path: "{{ filebeat_ssl_dir }}"
+  register: dir_status
+
+- name: copy cert
+  copy:
+    src: "{{ cert_dir }}"
+    dest: "{{ filebeat_ssl_dir }}"
+  when: not dir_status.stat.exists
+
+- name: check module
+  stat:
+    path: "/etc/filebeat/ansible.yml"
+  register: module_status  
+
+- name: add module
+  template: 
+    src: "{{ module_template }}" 
+    dest: "/etc/filebeat/module.d/ansible.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  become: true  
