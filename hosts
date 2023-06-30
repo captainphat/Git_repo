@@ -42,10 +42,10 @@
 
 ## db-[99:101]-node.example.com
 [windows]
-192.168.11.200 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
-192.168.11.175 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
-192.168.11.199 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
+#192.168.11.200 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
+#192.168.11.175 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
+#192.168.11.199 ansible_user=ansible ansible_password=P@ssWord123 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_python_interpreter="C:/Program Files/Python311"
 [linux]
 192.168.11.140 ansible_user=root ansible_password=P@ssWord123
-192.168.11.150 ansible_ssh_user=root ansible_ssh_password=P@ssWord123
+#192.168.11.150 ansible_ssh_user=root ansible_ssh_password=P@ssWord123
 192.168.11.6 ansible_user=root ansible_password=P@ssWord123
